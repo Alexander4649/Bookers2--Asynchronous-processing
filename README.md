@@ -18,7 +18,7 @@ relationshipモデルを作成
 follower_id:integer: フォローするユーザのid
 followed_id:integer: フォローされるユーザのid
 
-=> rails g model Relationship follower_id:integer followed_id:integer
+=> rails g model Relationship following_id:integer follower_id:integer
 
 * フォロー機能ではユーザー同士を結ぶ
 * ユーザーは自分自身をフォローできない

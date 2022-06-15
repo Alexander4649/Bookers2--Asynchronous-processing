@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  
 
   root :to =>"homes#top"
   get "home/about"=>"homes#about"
@@ -9,6 +9,14 @@ Rails.application.routes.draw do
     resources :book_comments, only: [:create, :destroy]
     resource :favorites, only: [:create, :destroy]
   end
-  resources :users, only: [:index,:show,:edit,:update]
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :users, only: [:index,:show,:edit,:update] do
+    resource :relationships,only: [:create,:destroy]
+    # get :followings, on: :member
+    # get :followers, on: :member
+    #あるユーザーがフォローする人全員を表示するルーティング
+    #あるユーザーをフォローしてくれている人全員を表示するルーティング(つまりフォロワー)
+    #on: :menberと書く事で、ルーティングにidを持たせることができる
+    get 'followings' => 'relationships#followings', as: 'followings'
+    get 'followers' => 'relationships#followers', as: 'followers'
+  end
 end
