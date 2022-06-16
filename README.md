@@ -1,86 +1,85 @@
-応用課題フェーズ　課題❹ フォロー/フォロワー機能実装
+応用課題フェーズ　課題❺ 検索機能実装
+
+
+* 実装する機能
 
 * コントローラ
-relationshipsコントローラを追加
-createアクションを追加
-　用途：フォローを作成
-destroyアクションを追加
-　用途：フォローを削除
-フォローする・外すボタンをクリックしたら元画面に遷移すること
+searchesコントローラ追加
+searchアクション追加
+　用途：検索を行う
 
-=> rails g controller relationshps
+①下記コードにて検索フォームからの情報を受け取っています。
+　検索モデル→params[:range]
+　検索方法→params[:search]
+　検索ワード→params[:word]
 
 
-* モデル
-relationshipモデルを作成
-follower_id:integer: フォローするユーザのid
-followed_id:integer: フォローされるユーザのid
+②if文を使い、検索モデルUserorBookで条件分岐させます。
 
-=> rails g model Relationship following_id:integer follower_id:integer
 
-* フォロー機能ではユーザー同士を結ぶ
-* ユーザーは自分自身をフォローできない
-* 複数のユーザーにフォローでき、複数のユーザーにフォローされる(多：多の関係)
-* フォロー機能の実現には、「誰が誰をフォローしているのか」「誰が誰にフォローされているか」の情報を保持すればよい
-* 多：多を解消する為に、中間テーブルが必要になる。これを使用し、「1:多」に置き換えることができる
-* 中間テーブルを設けても前後の情報は変わらない
-* フォローする側、フォローされる側両方からのアソシエーションが必要になる。=>リレーションシップに対して
+③looksメソッドを使い、検索内容を取得し、変数に代入します。
+検索方法params[:search]と、検索ワードparams[:word]を参照してデータを検索し、
+1：インスタンス変数@usersにUserモデル内での検索結果を代入します。
+2：インスタンス変数@booksにBookモデル内での検索結果を代入します。
 
- <モデル記述ヒント>
+これでsearchアクションは完成です。
 
-app/models/relationship.rb
-  
-  belongs_to :follower, class_name: "User"
-  
-  
-  app/models/user.rb
-  
-  # foreign_key（FK）には、@user.とした際に「@user.idがfollower_idなのかfollowed_idなのか」を指定します。
-  has_many :xxx, class_name: "モデル名", foreign_key: "○○_id", dependent: :destroy
-  # @user.booksのように、@user.yyyで、
-  # そのユーザがフォローしている人orフォローされている人の一覧を出したい
-  has_many :yyy, through: :xxx, source: :zzz
+##モデル内に検索方法の分岐定義
 
-* ルート
-=>userモデルにネスト
-resources :relationships,only: [:create,:destroy] =>URLがusers/id/relationship/id
-となるのでresourcesにする
+しかし、このままでは検索方法による切替が行われません。
+
+そこで、各モデルに条件分岐を追記します。
+nameは検索対象であるusersテーブル内のカラム名です。
+適宜、適したカラム名を指定しましょう。
+titleは検索対象であるbooksテーブル内のカラム名です。
+各々、適したカラム名を指定しましょう。
+
+各検索方法を下記のように指定しました。
+検索フォーム作成時に記載した内容を見返してみてください。
+・完全一致→perfect_match
+・前方一致→forward_match
+・後方一致→backword_match
+・部分一致→partial_match
+
+送られてきたsearchによって条件分岐させましょう。
+
+そして、whereメソッドを使いデータベースから該当データを取得し、変数に代入します。
+
+完全一致以外の検索方法は、
+#{word}の前後(もしくは両方に)、__%__を追記することで定義することができます。
+
+これにより、検索方法毎に適した検索が行われるようになりました。
+
+##検索結果の一覧表示
+
 
 * ビュー
+完全一致, 前方一致, 後方一致, 部分一致の検索手法をプルダウンメニューで選択できること
+ログインしている場合に限り、ヘッダーに検索窓・検索ボタンを設置すること
+検索結果表示画面を作成し、検索結果を表示すること
+検索対象(ユーザーか投稿か)の選択かをプルダウンメニューで選択できること
 
-user/show
-
-<サイドバーにフォロー数・フォロワー数を表示 >
-=>users/show
-フォロー数・フォロワー数はコメント機能と同様の手順(count up)
-
-<マイページ以外のサイドバーにフォローする・外すボタンを追加>
-=>user/show
-edit、destroy機能にて実装したcuurent_userかどうかを調べる実装を加える
-フォローするボタンは遷移先をどう設定するのか調べる。
-クリック後、フォローを外すボタンに切り替えないといけない
-フォロー外すボタンも同様に
+解説 _search.html.erb
+①url: search_path
+検索内容を、先ほど作成したルーティングに送信します。
 
 
-<ユーザー一覧画面にフォロー数・フォロワー数・フォローする・外すボタンの設置>
-=>user/index
-コメント・イイね機能の実装と似ている！
-遷移先をどうするのかを調べる
-
-<フォロー・フォロワー一覧画面を作成すること>
-=>user/relationship
-フォーマットはuser/indexページと同様の実装になる
-eachを使用して取り出すデータをrelationshipのデータにする必要がある
-
-  
-  
-* ＜エラー集ヒント＞
-  Couldn't find User without an ID
-IDなしにUserを探せません、というエラーになります。
-User.find(○○)というコードの場合、カッコ内の○○が正しくないことが多いです。
-ターミナルやルーティングを確認してみましょう。
+②<%= f.text_field :word %>
+検索内容を、wordとしてアクションに送っています。
 
 
-Could not find the source association(s) :xxx in model Relationship. Try ...(以下略)
-Relationshipモデル内にxxxというリレーションが見つかりません、というエラーになります。
-モデルに定義したアソシエーションが正しいか確認してみましょう。
+③<%= f.select :range, options_for_select([['User'], ['Book']]) %>
+今回は複数のモデルを検索できるように実装する為、
+__Userモデル__と__Bookモデル__を選択できるようにしています。
+
+選択したモデルをrangeとしてアクションに送っています。
+
+
+④ <%= f.select :search, options_for_select([["完全一致","perfect_match"]以下略]) %>
+検索手法を定義しています。
+今回のようにカンマ区切りで複数定義することができます。
+
+選択した検索手法をsearchとしてアクションに送っています。
+
+searchesコントローラ内で、検索結果を代入したインスタンス変数(@usersと@books)に対し、each文をつかって1つずつ取り出していきましょう。
+
