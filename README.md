@@ -1,85 +1,10 @@
-応用課題フェーズ　課題❺ 検索機能実装
+応用課題フェーズ　課題❻ 非同期処理(Asynchronous processing)
 
 
-* 実装する機能
+$('#favorite_btn_<%= @book.id %>').html("<%= j(render partial: 'favorites/btn', locals: {book: @book}) %>");
+$('#favorite_btn_<%= @book.id %>').html("<%= j(render partial: 'favorites/btn', locals: {book: @book}) %>");
 
-* コントローラ
-searchesコントローラ追加
-searchアクション追加
-　用途：検索を行う
+$('#favorite_#{@item.id}').html("#{escape_javascript(render "favorites/favorite", item: @item )}");
 
-①下記コードにて検索フォームからの情報を受け取っています。
-　検索モデル→params[:range]
-　検索方法→params[:search]
-　検索ワード→params[:word]
-
-
-②if文を使い、検索モデルUserorBookで条件分岐させます。
-
-
-③looksメソッドを使い、検索内容を取得し、変数に代入します。
-検索方法params[:search]と、検索ワードparams[:word]を参照してデータを検索し、
-1：インスタンス変数@usersにUserモデル内での検索結果を代入します。
-2：インスタンス変数@booksにBookモデル内での検索結果を代入します。
-
-これでsearchアクションは完成です。
-
-##モデル内に検索方法の分岐定義
-
-しかし、このままでは検索方法による切替が行われません。
-
-そこで、各モデルに条件分岐を追記します。
-nameは検索対象であるusersテーブル内のカラム名です。
-適宜、適したカラム名を指定しましょう。
-titleは検索対象であるbooksテーブル内のカラム名です。
-各々、適したカラム名を指定しましょう。
-
-各検索方法を下記のように指定しました。
-検索フォーム作成時に記載した内容を見返してみてください。
-・完全一致→perfect_match
-・前方一致→forward_match
-・後方一致→backword_match
-・部分一致→partial_match
-
-送られてきたsearchによって条件分岐させましょう。
-
-そして、whereメソッドを使いデータベースから該当データを取得し、変数に代入します。
-
-完全一致以外の検索方法は、
-#{word}の前後(もしくは両方に)、__%__を追記することで定義することができます。
-
-これにより、検索方法毎に適した検索が行われるようになりました。
-
-##検索結果の一覧表示
-
-
-* ビュー
-完全一致, 前方一致, 後方一致, 部分一致の検索手法をプルダウンメニューで選択できること
-ログインしている場合に限り、ヘッダーに検索窓・検索ボタンを設置すること
-検索結果表示画面を作成し、検索結果を表示すること
-検索対象(ユーザーか投稿か)の選択かをプルダウンメニューで選択できること
-
-解説 _search.html.erb
-①url: search_path
-検索内容を、先ほど作成したルーティングに送信します。
-
-
-②<%= f.text_field :word %>
-検索内容を、wordとしてアクションに送っています。
-
-
-③<%= f.select :range, options_for_select([['User'], ['Book']]) %>
-今回は複数のモデルを検索できるように実装する為、
-__Userモデル__と__Bookモデル__を選択できるようにしています。
-
-選択したモデルをrangeとしてアクションに送っています。
-
-
-④ <%= f.select :search, options_for_select([["完全一致","perfect_match"]以下略]) %>
-検索手法を定義しています。
-今回のようにカンマ区切りで複数定義することができます。
-
-選択した検索手法をsearchとしてアクションに送っています。
-
-searchesコントローラ内で、検索結果を代入したインスタンス変数(@usersと@books)に対し、each文をつかって1つずつ取り出していきましょう。
-
+$('#favorite_btn).html('hide')
+$('.favorite_btn').html(%= escape_javascript(render 'btn',book: @book)%)
