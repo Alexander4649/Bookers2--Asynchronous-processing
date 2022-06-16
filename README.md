@@ -1,7 +1,5 @@
 応用課題フェーズ　課題❹ フォロー/フォロワー機能実装
 
-
-
 * コントローラ
 relationshipsコントローラを追加
 createアクションを追加
@@ -86,20 +84,3 @@ User.find(○○)というコードの場合、カッコ内の○○が正しく
 Could not find the source association(s) :xxx in model Relationship. Try ...(以下略)
 Relationshipモデル内にxxxというリレーションが見つかりません、というエラーになります。
 モデルに定義したアソシエーションが正しいか確認してみましょう。
-
-
-<tr>
-	  <th>
-	   <% if @user != current_user %>
-	    <% if current_user.is_followed_by?(@user)%>
-	     <%= link_to user_relationships_path(@user), method: :post do %>
-	     <button class = "btn btn-sm btn-success">フォローする</button>
-	     <% end %>
-	    <% else %>
-	     <%= link_to user_relationships_path(@user), method: :delete do %>
-	     <button class = "btn btn-sm btn-danger">フォロー外す</button>
-	     <% end %>
-	    <% end %>
-	   <% end %>
-	  </th>
-  </tr>
