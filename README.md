@@ -5,3 +5,8 @@ $('#favorite_btn_<%= @book.id %>').html("<%= j(render partial: 'favorites/btn', 
 $('#favorite_btn_<%= @book.id %>').html("<%= j(render partial: 'favorites/btn', locals: {book: @book}) %>");
 
 $('#favorite_#{@item.id}').html("#{escape_javascript(render "favorites/favorite", item: @item )}");
+
+aa
+aaa
+
+
