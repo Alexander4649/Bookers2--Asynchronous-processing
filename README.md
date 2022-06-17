@@ -6,4 +6,4 @@ $('#favorite_btn_<%= @book.id %>').html("<%= j(render partial: 'favorites/btn', 
 
 $('#favorite_#{@item.id}').html("#{escape_javascript(render "favorites/favorite", item: @item )}");
 
-amad
+
