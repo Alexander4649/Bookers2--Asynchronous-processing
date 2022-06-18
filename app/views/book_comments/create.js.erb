@@ -1,0 +1,4 @@
+$('#book_comment_remote').html("<%= j(render "book_comments/index", book: @book_comment.book) %>");
+<!--$('.js-comment-form')[0].reset();-->
+<!--テキストの追加後、.js-comment-formの中身をリセット（空に）しています。-->
+$('#book_comment_form').html("<%= j(render "book_comments/form", book: @book, book_comment: BookComment.new) %>");
