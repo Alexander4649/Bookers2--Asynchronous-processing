@@ -18,12 +18,8 @@
         <td><%= book.body %></td>
         <td>コメント数: <%= book.book_comments.count %></td>
         <td id="favorite_buttons_<%= book.id %>">
-<<<<<<< HEAD
-            <%= render "favorites/favorite", book: book %></td>
-=======
             <%= render "favorites/favorite", book: book %>
         </td>
->>>>>>> 74084698c446230db09f81bcbceb4f4880e3b948
       </tr>
     <% end %>
   </tbody>

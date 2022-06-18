@@ -1,18 +1,10 @@
 <% if book.favorited_by?(current_user) %>
-<<<<<<< HEAD:app/views/favorites/_favorite.html.erb
   <%= link_to book_favorites_path(book), method: :delete,remote:true do %>
-=======
-  <%= link_to book_favorites_path(book), method: :delete, remote: true do %>
->>>>>>> 74084698c446230db09f81bcbceb4f4880e3b948:app/views/favorites/_btn.html.erb
     <i class="fas fa-heart" aria-hidden="true" style="color: red;"></i>
     <%= book.favorites.count %>
   <% end %>
 <% else %>
-<<<<<<< HEAD:app/views/favorites/_favorite.html.erb
   <%= link_to book_favorites_path(book), method: :post,remote:true do %>
-=======
-  <%= link_to book_favorites_path(book), method: :post, remote: true do %>
->>>>>>> 74084698c446230db09f81bcbceb4f4880e3b948:app/views/favorites/_btn.html.erb
     <i class="fas fa-heart" aria-hidden="true"></i>
 
   <% end %>
